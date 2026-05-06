@@ -10,8 +10,13 @@ class Telemetry:
     cleanup_attempted: int = 0
     cleanup_failed: int = 0
     maintenance_runs: int = 0
+    maintenance_failed: int = 0
+    fast_purge_attempted: int = 0
+    fast_purge_failed: int = 0
     duplicate_fallback_count: int = 0
     duplicate_group_count: int = 0
+    duplicate_skipped_count: int = 0
+    user_notice_count: int = 0
     cleanup_audit_tail: deque[str] = field(default_factory=lambda: deque(maxlen=20))
     last_maintenance_feedback: str = ""
 

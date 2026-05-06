@@ -48,4 +48,5 @@ python -m pytest
 
 ## Known limitations
 
-Duplicate-review and maintenance diagnostics are still being unified. Current diagnostics intentionally remain coarse for some maintenance and duplicate fallback pathways.
+
+Diagnostics remain summary-oriented; some duplicate fallback and maintenance detail paths are still being unified.

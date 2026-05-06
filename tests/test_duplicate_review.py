@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from safecleaner.duplicate_result import DuplicateReviewResult
 from safecleaner.duplicate_review import find_duplicates
 
 
@@ -8,11 +9,12 @@ def test_duplicate_review_finds_duplicates(tmp_path: Path) -> None:
     (tmp_path / "two.txt").write_text("same")
     (tmp_path / "three.txt").write_text("different")
 
-    groups, fallback_count = find_duplicates(str(tmp_path))
+    result = find_duplicates(str(tmp_path))
 
-    assert fallback_count == 0
-    assert len(groups) == 1
-    assert len(groups[0].duplicates) == 1
+    assert isinstance(result, DuplicateReviewResult)
+    assert result.fallback_count == 0
+    assert len(result.groups) == 1
+    assert len(result.groups[0].duplicates) == 1
 
 
 def test_duplicate_hash_fallback_does_not_crash(tmp_path: Path, monkeypatch) -> None:
@@ -30,7 +32,7 @@ def test_duplicate_hash_fallback_does_not_crash(tmp_path: Path, monkeypatch) -> 
 
     monkeypatch.setattr(Path, "open", broken_open)
 
-    groups, fallback_count = find_duplicates(str(tmp_path))
+    result = find_duplicates(str(tmp_path))
 
-    assert len(groups) == 0
-    assert fallback_count >= 2
+    assert len(result.groups) == 0
+    assert result.fallback_count >= 2
