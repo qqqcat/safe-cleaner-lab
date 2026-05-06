@@ -31,7 +31,8 @@ def test_fast_cleanup_stages_then_purges(tmp_path: Path) -> None:
     report, feedback = cleanup_path(str(target), "fast")
 
     assert report.failure_count == 0
-    assert feedback == "Staging purge completed"
+    assert feedback is not None
+    assert feedback.message == "Staging purge completed"
     assert not target.exists()
     staging = tmp_path / ".staging"
     assert staging.exists()

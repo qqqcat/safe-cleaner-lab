@@ -3,15 +3,15 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
-from .models import CleanupReport, CleanupResultItem, FailureKind
+from .models import CleanupReport, CleanupResultItem, FailureKind, MaintenanceResult
 from .staging import purge_staging, stage_target
 
 
-def cleanup_path(path: str, mode: str) -> tuple[CleanupReport, str | None]:
+def cleanup_path(path: str, mode: str) -> tuple[CleanupReport, MaintenanceResult | None]:
     target = Path(path)
     root = target.parent
     report = CleanupReport()
-    maintenance_feedback: str | None = None
+    maintenance_feedback: MaintenanceResult | None = None
 
     if not target.exists():
         report.items.append(
@@ -37,8 +37,7 @@ def cleanup_path(path: str, mode: str) -> tuple[CleanupReport, str | None]:
                 target.unlink()
         elif mode == "fast":
             stage_target(root, target)
-            maintenance = purge_staging(root)
-            maintenance_feedback = maintenance.message
+            maintenance_feedback = purge_staging(root)
         else:
             raise ValueError(f"Unsupported mode: {mode}")
 

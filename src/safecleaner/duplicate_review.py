@@ -4,6 +4,7 @@ import hashlib
 from collections import defaultdict
 from pathlib import Path
 
+from .duplicate_result import DuplicateReviewResult
 from .models import DuplicateGroup
 
 
@@ -20,7 +21,7 @@ def _hash_file(path: Path) -> tuple[str, bool]:
         return fallback, True
 
 
-def find_duplicates(path: str) -> tuple[list[DuplicateGroup], int]:
+def find_duplicates(path: str) -> DuplicateReviewResult:
     base = Path(path)
     by_size: dict[int, list[Path]] = defaultdict(list)
 
@@ -46,4 +47,4 @@ def find_duplicates(path: str) -> tuple[list[DuplicateGroup], int]:
                 sorted_files = sorted(str(f) for f in files)
                 groups.append(DuplicateGroup(keep=sorted_files[0], duplicates=sorted_files[1:]))
 
-    return groups, fallback_hits
+    return DuplicateReviewResult(groups=groups, fallback_count=fallback_hits, skipped_paths=[])
